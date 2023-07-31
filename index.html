@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Fabio Fanucchi">
+    <title>Meteo Real-Time</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+    <style>
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="check2" viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </symbol>
+        <symbol id="circle-half" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z" />
+        </symbol>
+        <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+            <path
+                d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z" />
+            <path
+                d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+        </symbol>
+        <symbol id="sun-fill" viewBox="0 0 16 16">
+            <path
+                d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+        </symbol>
+    </svg>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle" style="z-index: 1500;">
+        <button class="btn btn-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+            aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
+            <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
+                <use href="#circle-half"></use>
+            </svg>
+            <span class="visually-hidden" id="bd-theme-text">Cambia tema</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
+                    aria-pressed="false">
+                    <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+                        <use href="#sun-fill"></use>
+                    </svg>
+                    Light
+                    <svg class="bi ms-auto d-none" width="1em" height="1em">
+                        <use href="#check2"></use>
+                    </svg>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
+                    aria-pressed="false">
+                    <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+                        <use href="#moon-stars-fill"></use>
+                    </svg>
+                    Dark
+                    <svg class="bi ms-auto d-none" width="1em" height="1em">
+                        <use href="#check2"></use>
+                    </svg>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto"
+                    aria-pressed="true">
+                    <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+                        <use href="#circle-half"></use>
+                    </svg>
+                    Auto
+                    <svg class="bi ms-auto d-none" width="1em" height="1em">
+                        <use href="#check2"></use>
+                    </svg>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-lg-9 mx-auto p-4 py-md-5">
+        <header class="text-center pb-3 mb-5 border-bottom">
+                <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-speedometer"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M8 2a.5.5 0 0 1 .5.5V4a.5.5 0 0 1-1 0V2.5A.5.5 0 0 1 8 2zM3.732 3.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 8a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 7.31A.91.91 0 1 0 8.85 8.569l3.434-4.297a.389.389 0 0 0-.029-.518z" />
+                    <path fill-rule="evenodd"
+                        d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.945 11.945 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0z" />
+                </svg>
+                <h3 class="fw-light">Meteo Real-Time</h3>
+            </a>
+        </header>
+
+        <main>
+            <!-- <h1 class="text-body-emphasis">Get started with Bootstrap</h1>
+            <p class="fs-5 col-md-8">Quickly and easily get started with Bootstrap's compiled, production-ready files
+                with this barebones example featuring some basic HTML and helpful links. Download all our examples to
+                get started.</p>
+
+            <div class="mb-5">
+                <a href="../examples/" class="btn btn-primary btn-lg px-4">Download examples</a>
+            </div> -->
+
+            <div class="row justify-content-around pb-3 g-3">
+                <div class="col-sm-12 col-md-4">
+                    <div class="row">
+                        <div class="col-6 px-0 text-end">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0V2.5zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1z" />
+                                <path
+                                    d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V2.5a.5.5 0 0 1 1 0v8.585a1.5 1.5 0 0 1 1 1.415z" />
+                                <linearGradient id="lgT" x1="0" x2="0" y1="1" y2="0">
+                                    <stop offset="0" stop-opacity="1" stop-color="red">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                    <stop offset="0" stop-opacity="0" stop-color="red">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                </linearGradient>
+                                <path fill="url(#lgT)"
+                                    d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V2.5a.5.5 0 0 1 1 0v8.585a1.5 1.5 0 0 1 1 1.415z" />
+                            </svg>
+                        </div>
+                        <div class="col-6 px-0">
+                            <h3 class="mt-2" id="numT">--.-</h3>
+                            <h5 class="fw-light">°C</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="row">
+                        <div class="col-6 px-0 text-end">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6ZM6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13Z" />
+                                <linearGradient id="lgH" x1="0" x2="0" y1="1" y2="0">
+                                    <stop offset="0" stop-opacity="1" stop-color="blue">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                    <stop offset="0" stop-opacity="0" stop-color="blue">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                </linearGradient>
+                                <path fill="url(#lgH)"
+                                    d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6ZM6.646 4.646l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448c.82-1.641 1.717-2.753 2.093-3.13Z" />
+                            </svg>
+                        </div>
+                        <div class="col-6 px-0">
+                            <h3 class="mt-2" id="numH">--.-</h3>
+                            <h5 class="fw-light">%RH</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="row">
+                        <div class="col-6 px-0 text-end">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path transform="rotate(-90 0 0)" style="transform-origin:8px 8px"
+                                    d="M0 6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6zm2-1a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H2zm14 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z" />
+                                <path transform="rotate(-90 0 0)" style="transform-origin:8px 8px" d="M2 6h10v4h-10" />
+                                <linearGradient id="lgB" x1="0" x2="1" y1="0" y2="0">
+                                    <stop offset="0" stop-opacity="1" stop-color="green">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                    <stop offset="0" stop-opacity="0" stop-color="green">
+                                        <animate attributeName="offset" from="0" to="0" dur="1s" />
+                                    </stop>
+                                </linearGradient>
+                                <path fill="url(#lgB)" transform="rotate(-90 0 0)" style="transform-origin:8px 8px"
+                                    d="M2 6h10v4h-10" />
+                            </svg>
+                        </div>
+                        <div class="col-6 px-0">
+                            <h3 class="mt-2" id="numB">-.--</h3>
+                            <h5 class="fw-light">V</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-center">
+                    <h5 class="fw-light" style="display: inline-block">Ultimo aggiornamento: </h5>
+                    <h5 class="fw-light" style="display: inline-block" id="numDate"></h5>
+                </div>
+            </div>
+            <div class="">
+                <canvas id="timeserie"></canvas>
+            </div>
+        </main>
+        <footer class="pt-3 mt-5 text-body-secondary text-center border-top">
+            Developed by
+            <a href="http://fabiofanucchi.tk" class="text-primary">Fabio Fanucchi</a>
+        </footer>
+    </div>
+    <script src="./color-modes.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+    <script src="https://cdn.jsdelivr.net/npm/javascript-color-gradient@2.4.4/src/index.min.js"></script>
+    <script src="./timeline-chart.js"></script>
+
+</body>
+
+</html>
