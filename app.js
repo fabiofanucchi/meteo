@@ -1,6 +1,6 @@
 const thingSpeak = { channel: "2232196", apiKey: "M3QPKVAXT18DT3LA" };
 
-$('#fullDB').attr('href', `https://api.thingspeak.com/channels/${thingSpeak.channel}/feed.csv`);
+$('#fullDB').attr('href', `https://api.thingspeak.com/channels/${thingSpeak.channel}/feed.csv?api_key=${thingSpeak.apiKey}`);
 
 const gradientBYR = new Gradient()
     .setColorGradient("#1fddff", "#FBD786", "#F7797D")
